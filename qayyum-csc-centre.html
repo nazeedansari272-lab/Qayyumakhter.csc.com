@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Qayyum Akhtar CSC Centre</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary:    #1B2B4B;   /* deep navy */
+      --primary-lt: #243860;
+      --accent:     #C8973A;   /* classy gold */
+      --accent-lt:  #e0b35a;
+      --emerald:    #0F7A55;
+      --emerald-lt: #13a372;
+      --crimson:    #A0272A;
+      --teal:       #0E7490;
+      --violet:     #5B21B6;
+      --bg:         #F4F6FA;
+      --card-bg:    #FFFFFF;
+      --text:       #1a1f36;
+      --text-muted: #5c6680;
+      --border:     #dde2f0;
+      --shadow-sm:  0 2px 8px rgba(27,43,75,0.08);
+      --shadow-md:  0 8px 28px rgba(27,43,75,0.14);
+      --shadow-lg:  0 20px 56px rgba(27,43,75,0.2);
+      --radius-sm:  10px;
+      --radius-md:  16px;
+      --radius-lg:  24px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--primary);
+      position: relative;
+      overflow: hidden;
+    }
+    .tricolor-bar {
+      height: 5px;
+      background: linear-gradient(to right, #FF6B00 33.3%, #fff 33.3%, #fff 66.6%, #138808 66.6%);
+    }
+    .header-glow {
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(200,151,58,0.15) 0%, transparent 70%);
+      top: -100px; right: -80px;
+      pointer-events: none;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 20px 36px;
+      position: relative;
+      z-index: 2;
+    }
+    .logo-circle {
+      width: 68px; height: 68px;
+      background: linear-gradient(135deg, var(--accent), #a07020);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(200,151,58,0.4);
+      border: 3px solid rgba(255,255,255,0.2);
+    }
+    .header-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: 0.3px;
+    }
+    .header-text .sub {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 3px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .header-text .gold-tag {
+      display: inline-block;
+      margin-top: 5px;
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .wa-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .wa-pill:hover { background: #1aad55; transform: translateY(-2px); }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: linear-gradient(90deg, var(--accent), #a07020);
+      color: #fff;
+      font-size: 0.84rem;
+      font-weight: 600;
+      padding: 8px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-inner {
+      display: inline-block;
+      animation: scroll 32s linear infinite;
+    }
+    @keyframes scroll { from { transform:translateX(100vw); } to { transform:translateX(-100%); } }
+
+    /* ── PAGE SWITCH ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ══════════════════════════════
+       LOGIN PAGE
+    ══════════════════════════════ */
+    #loginPage {
+      min-height: calc(100vh - 130px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 20px;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(27,43,75,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(200,151,58,0.08) 0%, transparent 60%),
+        var(--bg);
+    }
+    #loginPage.active { display: flex; }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 440px;
+      animation: riseUp 0.5s cubic-bezier(.22,.68,0,1.2);
+    }
+    @keyframes riseUp {
+      from { opacity:0; transform:translateY(40px) scale(0.97); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .login-head {
+      background: linear-gradient(145deg, var(--primary), var(--primary-lt));
+      padding: 32px 36px 26px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-head::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: 50%;
+      transform: translateX(-50%);
+      width: 200px; height: 60px;
+      background: var(--card-bg);
+      border-radius: 50%;
+    }
+    .login-head .lh-icon { font-size: 2.8rem; margin-bottom: 10px; }
+    .login-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      color: #fff;
+      font-weight: 700;
+    }
+    .login-head p { font-size: 0.88rem; color: rgba(255,255,255,0.6); margin-top: 5px; }
+
+    .login-body { padding: 36px 36px 32px; }
+
+    .err-box {
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #b91c1c;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .err-box.show { display: block; }
+
+    .fld { margin-bottom: 20px; }
+    .fld label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .fld input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.97rem;
+      color: var(--text);
+      background: #fafbff;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .fld input::placeholder { color: #aab; font-size: 0.9rem; }
+    .fld input:focus {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(200,151,58,0.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--accent), #a07020);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.25s;
+      box-shadow: 0 6px 20px rgba(200,151,58,0.35);
+      margin-top: 6px;
+    }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(200,151,58,0.45);
+    }
+    .login-btn:active { transform: translateY(0); }
+
+    .login-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #aab;
+      margin-top: 14px;
+    }
+
+    .hint-box {
+      background: linear-gradient(135deg, #fffbf0, #fff8e0);
+      border: 1px solid #ffe5a0;
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-size: 0.8rem;
+      color: #7a6010;
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+
+    /* ══════════════════════════════
+       DASHBOARD
+    ══════════════════════════════ */
+    #dashPage { display: none; }
+    #dashPage.active { display: block; }
+
+    .dash-bar {
+      background: linear-gradient(90deg, var(--emerald), #0a5c40);
+      color: #fff;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .dash-bar .welcome-msg { font-size: 1rem; font-weight: 600; }
+    .dash-bar .welcome-msg span { color: var(--accent-lt); font-weight: 700; }
+
+    .logout-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 7px 20px;
+      border-radius: 40px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.83rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.28); }
+
+    .dash-body { padding: 32px 28px 64px; max-width: 1200px; margin: 0 auto; }
+
+    /* NOTICE */
+    .notice {
+      background: linear-gradient(135deg, #fffbf2, #fff8e8);
+      border: 1.5px solid #edd580;
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+    .notice h3 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .notice ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .notice ul li {
+      font-size: 0.86rem;
+      color: #5a4500;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+    .notice ul li::before { content: '▸'; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+
+    /* SECTION HEADING */
+    .sec-head { margin-bottom: 24px; }
+    .sec-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .sec-head p { font-size: 0.88rem; color: var(--text-muted); }
+    .sec-head p strong { color: var(--accent); }
+
+    /* TABS */
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
+    .tab {
+      padding: 8px 18px;
+      border-radius: 40px;
+      border: 1.5px solid var(--border);
+      background: var(--card-bg);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab:hover { border-color: var(--primary); color: var(--primary); }
+    .tab.on {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(27,43,75,0.2);
+    }
+
+    /* SERVICE CARDS */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .svc {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: 22px 18px 18px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .svc::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 2px 2px 0 0;
+      transition: height 0.2s;
+    }
+    .svc:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+    .svc:hover::before { height: 5px; }
+
+    .svc.navy::before   { background: var(--primary); }
+    .svc.gold::before   { background: var(--accent); }
+    .svc.green::before  { background: var(--emerald); }
+    .svc.violet::before { background: var(--violet); }
+    .svc.crimson::before{ background: var(--crimson); }
+    .svc.teal::before   { background: var(--teal); }
+
+    .svc:hover.navy   { border-color: var(--primary); }
+    .svc:hover.gold   { border-color: var(--accent); }
+    .svc:hover.green  { border-color: var(--emerald); }
+    .svc:hover.violet { border-color: var(--violet); }
+    .svc:hover.crimson{ border-color: var(--crimson); }
+    .svc:hover.teal   { border-color: var(--teal); }
+
+    .svc-icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .svc-name { font-size: 0.93rem; font-weight: 700; color: var(--text); margin-bottom: 5px; line-height: 1.35; }
+    .svc-desc { font-size: 0.76rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 10px; }
+
+    .svc-price {
+      display: inline-block;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--emerald);
+      background: #f0fdf4;
+      border: 1.5px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 3px 12px;
+      margin-bottom: 12px;
+      letter-spacing: 0.3px;
+    }
+
+    .svc-btn {
+      display: inline-block;
+      padding: 7px 18px;
+      border-radius: 40px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .navy   .svc-btn { background: var(--primary); }
+    .gold   .svc-btn { background: var(--accent); }
+    .green  .svc-btn { background: var(--emerald); }
+    .violet .svc-btn { background: var(--violet); }
+    .crimson.svc-btn { background: var(--crimson); }
+    .teal   .svc-btn { background: var(--teal); }
+    .svc-btn:hover { opacity: 0.85; transform: scale(1.05); }
+
+    /* CONTACT BANNER */
+    .contact-banner {
+      background: linear-gradient(135deg, var(--primary), var(--primary-lt));
+      border-radius: var(--radius-md);
+      padding: 26px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 32px;
+      box-shadow: var(--shadow-md);
+    }
+    .contact-banner h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .contact-banner p { font-size: 0.85rem; color: rgba(255,255,255,0.55); }
+    .wa-big {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: #fff;
+      padding: 13px 26px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .wa-big:hover { transform: translateY(-2px); background: #1aad55; }
+
+    /* ══════════════════════════════
+       MODAL
+    ══════════════════════════════ */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,15,40,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .overlay.open { display: flex; animation: bgin 0.2s ease; }
+    @keyframes bgin { from { opacity:0; } to { opacity:1; } }
+
+    .modal {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 460px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      animation: pop 0.28s cubic-bezier(.22,.68,0,1.2);
+    }
+    @keyframes pop { from { transform:scale(0.84); opacity:0; } to { transform:scale(1); opacity:1; } }
+
+    .modal-head {
+      background: linear-gradient(135deg, #1a7a45, #25D366);
+      padding: 22px 26px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #fff;
+    }
+    .modal-head-ico { font-size: 2.2rem; }
+    .modal-head h3 { font-size: 1.15rem; font-weight: 700; }
+    .modal-head p { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+    .modal-body { padding: 24px 26px; }
+    .m-row { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+    .m-row .lbl { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; min-width: 90px; padding-top: 2px; }
+    .m-row .val { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+    .m-textarea {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      resize: vertical;
+      min-height: 85px;
+      outline: none;
+      transition: border 0.2s;
+      margin-top: 6px;
+    }
+    .m-textarea:focus { border-color: #25D366; box-shadow: 0 0 0 3px rgba(37,211,102,0.12); }
+
+    .modal-foot {
+      padding: 0 26px 26px;
+      display: flex;
+      gap: 10px;
+    }
+    .btn-back {
+      flex: 1;
+      padding: 12px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card-bg);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-back:hover { border-color: #bbb; color: var(--text); }
+    .btn-send {
+      flex: 2;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #25D366, #1aad55);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 6px 18px rgba(37,211,102,0.3);
+    }
+    .btn-send:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(37,211,102,0.4); }
+
+    /* FOOTER */
+    footer {
+      background: var(--primary);
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      padding: 18px;
+      font-size: 0.8rem;
+      letter-spacing: 0.3px;
+    }
+    footer strong { color: rgba(255,255,255,0.85); }
+    footer .gold { color: var(--accent); }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .header-inner { padding: 14px 16px; }
+      .header-text h1 { font-size: 1.25rem; }
+      .header-right { display: none; }
+      .login-head { padding: 24px 22px 20px; }
+      .login-body { padding: 26px 22px 24px; }
+      .dash-body { padding: 20px 14px 48px; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; }
+      .svc { padding: 16px 12px 14px; }
+      .svc-icon { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <div class="tricolor-bar"></div>
+  <div class="header-glow"></div>
+  <div class="header-inner">
+    <div class="logo-circle">🏛️</div>
+    <div class="header-text">
+      <h1>Qayyum Akhtar CSC Centre</h1>
+      <div class="sub">Common Service Centre &nbsp;|&nbsp; Jan Seva Kendra</div>
+      <div class="gold-tag">✦ Digital India &nbsp;·&nbsp; Digital Seva &nbsp;·&nbsp; Digital Future ✦</div>
+    </div>
+    <div class="header-right">
+      <a href="https://wa.me/919807103625" target="_blank" class="wa-pill">
+        📲 WhatsApp: 9807103625
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker">
+  <span class="ticker-inner">
+    ✦ Welcome to Qayyum Akhtar CSC Centre — All Government Services Under One Roof &nbsp;|&nbsp;
+    Aadhaar, PAN, Ration Card, Income Certificate, Passport, Banking & many more &nbsp;|&nbsp;
+    WhatsApp: 9807103625 &nbsp;|&nbsp;
+    Apply for any service online — Fast &amp; Reliable &nbsp;|&nbsp;
+    Mon–Sat: 9:00 AM to 6:00 PM &nbsp;|&nbsp;
+    🇮🇳 Jai Hind — Digital India
+  </span>
+</div>
+
+<!-- ═══ LOGIN PAGE ═══ -->
+<div id="loginPage" class="page active">
+  <div class="login-wrap">
+    <div class="login-card">
+
+      <div class="login-head">
+        <div class="lh-icon">🔐</div>
+        <h2>Citizen Login</h2>
+        <p>Sign in to access all government services</p>
+      </div>
+
+      <div class="login-body">
+        <div class="err-box" id="loginErr">⚠ Please check your details and try again.</div>
+
+        <div class="fld">
+          <label>👤 Username</label>
+          <input type="text" id="uName" placeholder="Enter your username" autocomplete="off"/>
+        </div>
+
+        <div class="fld">
+          <label>📱 Mobile Number</label>
+          <input type="tel" id="uMob" placeholder="Enter your 10-digit mobile number" maxlength="10"/>
+        </div>
+
+        <div class="fld">
+          <label>🔒 Password</label>
+          <input type="password" id="uPass" placeholder="Enter your password"/>
+        </div>
+
+        <button class="login-btn" onclick="doLogin()">Login &nbsp;→</button>
+
+        <div class="hint-box">
+          💡 <strong>Demo:</strong> Enter any username, a 10-digit mobile number and any password (min. 4 characters) to login.
+        </div>
+
+        <p class="login-note">🔒 Your information is secure &nbsp;|&nbsp; Qayyum Akhtar CSC Centre</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div id="dashPage" class="page">
+
+  <div class="dash-bar">
+    <div class="welcome-msg">👋 Welcome, <span id="dispName">Citizen</span> — What service do you need today?</div>
+    <button class="logout-btn" onclick="doLogout()">← Logout</button>
+  </div>
+
+  <div class="dash-body">
+
+    <!-- Notice Board -->
+    <div class="notice">
+      <h3>📢 Notice Board</h3>
+      <ul>
+        <li>Aadhaar update / correction: Monday – Saturday, 9 AM to 6 PM</li>
+        <li>PAN Card (new &amp; correction): Ready within 1–2 working days</li>
+        <li>Pradhan Mantri Yojana applications: Available any day — contact via WhatsApp</li>
+        <li>Centre timings: Monday to Saturday — 9:00 AM to 6:00 PM</li>
+        <li>New service: Ayushman Bharat e-Card is now available 🎉</li>
+      </ul>
+    </div>
+
+    <div class="sec-head">
+      <h2>Our Services</h2>
+      <p>Select the service you need and <strong>send a request directly via WhatsApp</strong></p>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="tabs">
+      <button class="tab on"  onclick="showCat('all',     this)">📋 All Services</button>
+      <button class="tab"     onclick="showCat('id',      this)">🪪 Identity</button>
+      <button class="tab"     onclick="showCat('gov',     this)">🏛️ Government</button>
+      <button class="tab"     onclick="showCat('finance', this)">💰 Finance</button>
+      <button class="tab"     onclick="showCat('edu',     this)">📚 Education</button>
+      <button class="tab"     onclick="showCat('health',  this)">🏥 Health</button>
+      <button class="tab"     onclick="showCat('utility', this)">⚡ Utility</button>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="grid" id="svcGrid"></div>
+
+    <!-- Contact Banner -->
+    <div class="contact-banner">
+      <div>
+        <h4>Contact Qayyum Akhtar Directly</h4>
+        <p>Send your request on WhatsApp — quick and reliable response</p>
+      </div>
+      <a href="https://wa.me/919807103625?text=Hello%20Qayyum%20Akhtar%20ji%2C%20I%20need%20help%20with%20a%20CSC%20service." target="_blank" class="wa-big">
+        📲 WhatsApp: 9807103625
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ MODAL ═══ -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-head-ico">📲</div>
+      <div>
+        <h3 id="mTitle">Service Request</h3>
+        <p>Send your request directly via WhatsApp</p>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="m-row">
+        <span class="lbl">Service</span>
+        <span class="val" id="mSvc">—</span>
+      </div>
+      <div class="m-row">
+        <span class="lbl">Applicant</span>
+        <span class="val" id="mUser">—</span>
+      </div>
+      <div class="m-row">
+        <span class="lbl">Mobile</span>
+        <span class="val" id="mMob">—</span>
+      </div>
+      <div class="m-row" style="flex-direction:column; gap:4px;">
+        <span class="lbl">Additional Info (Optional)</span>
+        <textarea class="m-textarea" id="mExtra" placeholder="e.g. Urgent, home address, any special requirement..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-back" onclick="closeModal()">← Go Back</button>
+      <button class="btn-send" onclick="sendWA()">📲 Send on WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Qayyum Akhtar CSC Centre</strong> &nbsp;|&nbsp;
+  Common Service Centre &nbsp;|&nbsp;
+  <span class="gold">📱 9807103625</span> &nbsp;|&nbsp;
+  Mon–Sat: 9 AM – 6 PM &nbsp;|&nbsp;
+  © 2025 All Rights Reserved
+</footer>
+
+<script>
+const WA = '919807103625';
+
+const SERVICES = [
+  // Identity
+  { cat:'id', cl:'navy',    icon:'🪪', name:'Aadhaar Card — New / Update',    desc:'New enrollment, address or mobile number update',    price:'₹100' },
+  { cat:'id', cl:'gold',    icon:'📄', name:'PAN Card — New / Correction',     desc:'Apply for a new PAN or correct existing details',    price:'₹150' },
+  { cat:'id', cl:'navy',    icon:'🛂', name:'Passport Application',            desc:'Apply for a new or renewal passport',                price:'₹300' },
+  { cat:'id', cl:'green',   icon:'🚗', name:'Driving Licence (DL)',            desc:'New driving licence or renewal application',         price:'₹200' },
+  { cat:'id', cl:'violet',  icon:'🗳️', name:'Voter ID Card',                   desc:'New Voter ID or correction / address change',        price:'₹100' },
+  { cat:'id', cl:'gold',    icon:'🏠', name:'Ration Card',                     desc:'New ration card or add / remove family member',      price:'₹150' },
+  // Government
+  { cat:'gov', cl:'green',  icon:'📜', name:'Income Certificate',              desc:'Official income certificate for government use',     price:'₹100' },
+  { cat:'gov', cl:'navy',   icon:'🏡', name:'Domicile / Residence Certificate',desc:'Proof of residence for official purposes',           price:'₹100' },
+  { cat:'gov', cl:'gold',   icon:'🎂', name:'Birth Certificate',               desc:'Apply for a new birth certificate',                  price:'₹100' },
+  { cat:'gov', cl:'crimson',icon:'📋', name:'Death Certificate',               desc:'Apply for a death certificate',                      price:'₹100' },
+  { cat:'gov', cl:'violet', icon:'🌾', name:'Kisan Registration (PM-Kisan)',   desc:'Register for Pradhan Mantri Kisan Samman Nidhi',     price:'₹100' },
+  { cat:'gov', cl:'green',  icon:'🏥', name:'Ayushman Bharat Card',            desc:'Free health insurance scheme — apply now',           price:'₹100' },
+  { cat:'gov', cl:'teal',   icon:'🔧', name:'e-Shram Card',                    desc:'Registration for unorganised sector workers',        price:'₹50'  },
+  { cat:'gov', cl:'navy',   icon:'👴', name:'Old Age / Widow Pension',         desc:'Apply for government pension schemes',               price:'₹150' },
+  { cat:'gov', cl:'gold',   icon:'🏚️', name:'PM Awas Yojana',                  desc:'Apply for government housing scheme',                price:'₹200' },
+  { cat:'gov', cl:'green',  icon:'💧', name:'Water / Electricity Connection',  desc:'Apply for a new utility connection',                 price:'₹150' },
+  // Finance
+  { cat:'finance', cl:'navy',   icon:'🏦', name:'Bank Account Opening',        desc:'Open a PM Jan Dhan or savings account via CSC',      price:'₹100' },
+  { cat:'finance', cl:'green',  icon:'💸', name:'Money Transfer (AEPS/NEFT)',   desc:'Send money securely through government channels',    price:'₹30'  },
+  { cat:'finance', cl:'gold',   icon:'📋', name:'LIC / Insurance',             desc:'Apply for life insurance and government schemes',    price:'₹200' },
+  { cat:'finance', cl:'violet', icon:'📊', name:'Mutual Fund / SIP',           desc:'Start small savings with big returns',               price:'₹150' },
+  { cat:'finance', cl:'crimson',icon:'💳', name:'Credit / Debit Card',         desc:'Apply for a new card through your bank',             price:'₹100' },
+  { cat:'finance', cl:'teal',   icon:'🏠', name:'Home / Kisan Loan',           desc:'Loan documentation and application support',         price:'₹300' },
+  // Education
+  { cat:'edu', cl:'navy',   icon:'🎓', name:'Scholarship Application',         desc:'SC/ST/OBC and merit-based scholarship forms',        price:'₹150' },
+  { cat:'edu', cl:'gold',   icon:'📝', name:'School / College Admission',      desc:'Assistance with admission forms and deadlines',      price:'₹100' },
+  { cat:'edu', cl:'green',  icon:'📜', name:'Certificate Verification',        desc:'Verify academic and professional certificates',      price:'₹100' },
+  { cat:'edu', cl:'violet', icon:'💻', name:'Digital Literacy Course',         desc:'Learn computers and internet skills at our centre',  price:'₹500' },
+  // Health
+  { cat:'health', cl:'crimson',icon:'💊', name:'Telemedicine / Doctor Consult',desc:'Consult a doctor online from home',                 price:'₹100' },
+  { cat:'health', cl:'green',  icon:'💉', name:'Vaccination Certificate',      desc:'COVID-19 or any vaccine certificate download',       price:'₹50'  },
+  { cat:'health', cl:'navy',   icon:'🏥', name:'Hospital OPD Booking',         desc:'Book an appointment at a government hospital',       price:'₹50'  },
+  { cat:'health', cl:'gold',   icon:'🩺', name:'Mother & Child Health Card',   desc:'Maternal and child health protection card',          price:'₹100' },
+  // Utility
+  { cat:'utility', cl:'gold',   icon:'⚡', name:'Electricity Bill Payment',    desc:'Pay your electricity bill online instantly',         price:'₹30'  },
+  { cat:'utility', cl:'teal',   icon:'📡', name:'DTH / Mobile Recharge',       desc:'Recharge any network or DTH connection',             price:'₹20'  },
+  { cat:'utility', cl:'navy',   icon:'🚂', name:'Train / Bus Ticket Booking',  desc:'Book IRCTC or bus tickets easily',                   price:'₹50'  },
+  { cat:'utility', cl:'violet', icon:'✈️', name:'Flight Ticket Booking',       desc:'Affordable flight ticket booking assistance',        price:'₹100' },
+  { cat:'utility', cl:'green',  icon:'📮', name:'Speed Post / Courier',        desc:'Send documents and parcels via Speed Post',          price:'₹30'  },
+  { cat:'utility', cl:'crimson',icon:'🖨️', name:'Photocopy / Print / Scan',    desc:'Print, scan and copy all your documents',            price:'₹5/page'},
+  { cat:'utility', cl:'gold',   icon:'📸', name:'Passport Size Photo',         desc:'Instant passport size photo service',                price:'₹50'  },
+];
+
+let user = { name:'', mob:'' };
+let selSvc = null;
+
+function renderSvc(cat) {
+  const list = cat === 'all' ? SERVICES : SERVICES.filter(s => s.cat === cat);
+  document.getElementById('svcGrid').innerHTML = list.map(s => `
+    <div class="svc ${s.cl}" onclick="openModal('${s.name.replace(/'/g,"\\'")}','${s.icon}','${s.price}')">
+      <div class="svc-icon">${s.icon}</div>
+      <div class="svc-name">${s.name}</div>
+      <div class="svc-desc">${s.desc}</div>
+      <div class="svc-price">${s.price}</div>
+      <button class="svc-btn">Apply Now →</button>
+    </div>
+  `).join('');
+}
+
+function showCat(cat, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  renderSvc(cat);
+}
+
+function doLogin() {
+  const n = document.getElementById('uName').value.trim();
+  const m = document.getElementById('uMob').value.trim();
+  const p = document.getElementById('uPass').value.trim();
+  const err = document.getElementById('loginErr');
+
+  if (n.length < 2) { showErr('Please enter a valid username (at least 2 characters).'); return; }
+  if (!/^\d{10}$/.test(m)) { showErr('Please enter a valid 10-digit mobile number.'); return; }
+  if (p.length < 4) { showErr('Password must be at least 4 characters.'); return; }
+
+  err.classList.remove('show');
+  user = { name: n, mob: m };
+  document.getElementById('dispName').textContent = n;
+  document.getElementById('loginPage').classList.remove('active');
+  document.getElementById('dashPage').classList.add('active');
+  renderSvc('all');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showErr(msg) {
+  const el = document.getElementById('loginErr');
+  el.textContent = '⚠ ' + msg;
+  el.classList.add('show');
+}
+
+function doLogout() {
+  document.getElementById('dashPage').classList.remove('active');
+  document.getElementById('loginPage').classList.add('active');
+  ['uName','uMob','uPass'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('loginErr').classList.remove('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openModal(svc, icon, price) {
+  selSvc = svc;
+  document.getElementById('mTitle').textContent = icon + '  ' + svc;
+  document.getElementById('mSvc').textContent  = svc + '  —  ' + price;
+  document.getElementById('mUser').textContent = user.name;
+  document.getElementById('mMob').textContent  = user.mob;
+  document.getElementById('mExtra').value = '';
+  document.getElementById('overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('overlay'))
+    document.getElementById('overlay').classList.remove('open');
+}
+
+function sendWA() {
+  const extra = document.getElementById('mExtra').value.trim();
+  const msg =
+`Hello Qayyum Akhtar ji! 🙏
+
+I would like to apply for the following CSC service:
+
+📋 *Service:* ${selSvc}
+👤 *Name:* ${user.name}
+📱 *Mobile:* ${user.mob}${extra ? '\n📝 *Note:* ' + extra : ''}
+
+Kindly guide me on the next steps. Thank you!`;
+
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginPage').classList.contains('active')) doLogin();
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
